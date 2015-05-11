@@ -264,12 +264,12 @@ class InstGrid
 				$(button).siblings().removeClass('btn-primary')
 				$(button).toggleClass('btn-primary')
 
-			if $('.resp.btn-primary').length == @maxClicks
-				$('#rightButton').removeClass('disabled')
-				$('#rightButton').addClass('btn-success')
-			else if $('.resp.btn-primary').length != @maxClicks
-				$('#rightButton').addClass('disabled')
-				$('#rightButton').removeClass('btn-success')
+				if $('.resp.btn-primary').length == @maxClicks
+					$('#rightButton').removeClass('disabled')
+					$('#rightButton').addClass('btn-success')
+				else if $('.resp.btn-primary').length != @maxClicks
+					$('#rightButton').addClass('disabled')
+					$('#rightButton').removeClass('btn-success')
 
 
 	checkResponses: ->

@@ -264,13 +264,13 @@
         if (!this.disabled) {
           $(button).siblings().removeClass('btn-primary');
           $(button).toggleClass('btn-primary');
-        }
-        if ($('.resp.btn-primary').length === this.maxClicks) {
-          $('#rightButton').removeClass('disabled');
-          return $('#rightButton').addClass('btn-success');
-        } else if ($('.resp.btn-primary').length !== this.maxClicks) {
-          $('#rightButton').addClass('disabled');
-          return $('#rightButton').removeClass('btn-success');
+          if ($('.resp.btn-primary').length === this.maxClicks) {
+            $('#rightButton').removeClass('disabled');
+            return $('#rightButton').addClass('btn-success');
+          } else if ($('.resp.btn-primary').length !== this.maxClicks) {
+            $('#rightButton').addClass('disabled');
+            return $('#rightButton').removeClass('btn-success');
+          }
         }
       }
     };
