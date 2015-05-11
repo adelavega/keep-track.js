@@ -67,8 +67,7 @@
   };
 
   clearGrid = function() {
-    $('.btn-group').removeClass('disabled');
-    return $('.resp').removeClass('btn-primary').removeClass('disabled');
+    return $('.resp').removeClass('btn-primary');
   };
 
   all_stim = {
@@ -224,9 +223,8 @@
       this.correct = correct != null ? correct : false;
       this.leftKey = leftKey != null ? leftKey : "Back";
       this.rightKey = rightKey != null ? rightKey : "Continue";
-      this.clicks = 0;
-      this.maxClicks = this.categories.length;
-      this.tries = 0;
+      this.maxClicks = this.correct.length;
+      console.log(this.correct.length);
     }
 
     InstGrid.prototype.start = function(exitTrial) {
@@ -240,42 +238,45 @@
         keyText(this.leftKey, 'left');
       }
       if (this.rightKey) {
-        return keyText(this.rightKey, 'right');
+        keyText(this.rightKey, 'right');
+      }
+      if (this.correct !== false) {
+        keyText('Submit', 'right');
+        $('#rightButton').addClass('disabled');
+        return $('#rightButton').removeClass('btn-success');
       }
     };
 
     InstGrid.prototype.reset = function() {
-      this.clicks = 0;
       return clearGrid();
     };
 
     InstGrid.prototype.buttonClick = function(button) {
-      var acc;
       if (button.id === 'leftText' || button.id === 'leftButton') {
-        acc = 'BACK';
         return closeGrid(this.exitTrial(false));
       } else if (button.id === 'rightText' || button.id === 'rightButton') {
-        acc = 'FORWARD';
-        $('#responses').addClass('hidden');
-        return this.exitTrial();
+        if (!this.correct) {
+          return closeGrid(this.exitTrial);
+        } else {
+          return this.checkResponses();
+        }
       } else {
         if (!this.disabled) {
-          this.clicks += 1;
-          $(button).siblings().removeClass('btn-primary').addClass('disabled');
-          $(button).toggleClass('btn-primary').addClass('disabled');
+          $(button).siblings().removeClass('btn-primary');
+          $(button).toggleClass('btn-primary');
         }
-        if (this.clicks === this.maxClicks) {
-          if (!this.correct) {
-            return closeGrid(this.exitTrial);
-          } else {
-            return this.checkResponses();
-          }
+        if ($('.resp.btn-primary').length === this.maxClicks) {
+          $('#rightButton').removeClass('disabled');
+          return $('#rightButton').addClass('btn-success');
+        } else if ($('.resp.btn-primary').length !== this.maxClicks) {
+          $('#rightButton').addClass('disabled');
+          return $('#rightButton').removeClass('btn-success');
         }
       }
     };
 
     InstGrid.prototype.checkResponses = function() {
-      var allCorr, resp, responses, text, _i, _len,
+      var allCorr, resp, responses, _i, _len,
         _this = this;
       responses = $('.resp.btn-primary').map(function() {
         return $(this).text();
@@ -294,22 +295,16 @@
           return $('#correct').modal('hide');
         }), 1250);
       } else {
-        this.tries += 1;
-        if (this.tries < 2) {
-          $('#error').modal('show');
-          setTimeout((function() {
-            return $('#error').modal('hide');
-          }), 1250);
-        } else {
-          text = 'The correct answer is: ' + this.correct.join(", ");
-          $('#errortext').html(text);
-          $('#error').modal('show');
-          setTimeout((function() {
-            return $('#error').modal('hide');
-          }), 5000);
-        }
-        return this.reset();
+        return this.showError();
       }
+    };
+
+    InstGrid.prototype.showError = function() {
+      var _this = this;
+      $('#error').modal('show');
+      return setTimeout((function() {
+        return $('#error').modal('hide');
+      }), 1250);
     };
 
     return InstGrid;
@@ -489,7 +484,7 @@
     return currSession.start();
   });
 
-  blocks = [new Instruction(instructions[0]), new InstGrid(instructions[1]), new Instruction(instructions[2]), new Instruction(instructions[3]), new Instruction(instructions[4], "Back", "Start!"), new PracBlock("prac1", "Ready?", all_stim['pracLists'][0]), new Instruction(instructions[5], "See again", "Continue"), new InstGrid(instructions[6], ['Animals', 'Relatives'], true, false), new InstGrid(instructions[7], ['Animals', 'Relatives'], false, ['Aunt', 'Cat'], false, false), new Instruction(instructions[8], null, "Start"), new PracBlock("prac1", "Ready?", all_stim['pracLists'][1], 2000), new InstGrid("Please enter the last word of each category", all_stim['pracLists'][1][0], false, all_stim['pracLists'][1][1], false, false), new Instruction(instructions[9]), new Questionnaire, new Debriefing];
+  blocks = [new Instruction(instructions[0]), new InstGrid(instructions[1]), new Instruction(instructions[2]), new Instruction(instructions[3]), new Instruction(instructions[4], "Back", "Start!"), new PracBlock("prac1", "Ready?", all_stim['pracLists'][0]), new Instruction(instructions[5], "See again", "Continue"), new InstGrid(instructions[6], all_cats, true, false), new InstGrid(instructions[7], all_cats, false, ['Aunt', 'Cat'], false, false), new Instruction(instructions[8], null, "Start"), new PracBlock("prac1", "Ready?", all_stim['pracLists'][1], 2000), new InstGrid("Please enter the last word of each category", all_cats, false, all_stim['pracLists'][1][1], false, false), new Instruction(instructions[9]), new Questionnaire, new Debriefing];
 
   currSession = new Session(blocks);
 

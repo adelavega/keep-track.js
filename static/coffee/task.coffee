@@ -100,8 +100,7 @@ closeGrid = (func) ->
 
 clearGrid = ->
 	# Reset grid before showing again
-	$('.btn-group').removeClass('disabled')
-	$('.resp').removeClass('btn-primary').removeClass('disabled')
+	$('.resp').removeClass('btn-primary')
 
 
 ## psychTask.cs generic task
@@ -226,13 +225,12 @@ class Instruction
 
 class InstGrid
 	constructor: (@message, @categories=all_cats, @disabled=true, @correct=false, @leftKey = "Back", @rightKey = "Continue") ->
-		@clicks = 0
-		@maxClicks = @categories.length
-		@tries = 0
+		@maxClicks = @correct.length
+		console.log(@correct.length)
+
 
 	start: (@exitTrial) ->
 		fillGrid(@categories)
-	
 
 		$('#inst').html(@message)
 		$('#inst').show()
@@ -245,29 +243,34 @@ class InstGrid
 		if @rightKey
 			keyText(@rightKey, 'right')
 
+		if @correct != false
+			keyText('Submit', 'right')
+			$('#rightButton').addClass('disabled')
+			$('#rightButton').removeClass('btn-success')
+
 	reset: ->
-		@clicks = 0
 		clearGrid()
 
 	buttonClick: (button) ->
 		if button.id is 'leftText' or button.id is 'leftButton'
-			acc = 'BACK'
 			closeGrid(@exitTrial false)
 		else if button.id is 'rightText' or button.id is 'rightButton'
-			acc = 'FORWARD'
-			$('#responses').addClass('hidden')
-			@exitTrial()
+			if not @correct
+				closeGrid(@exitTrial)
+			else
+				@checkResponses()
 		else  
 			if not @disabled
-				@clicks += 1
-				$(button).siblings().removeClass('btn-primary').addClass('disabled')
-				$(button).toggleClass('btn-primary').addClass('disabled')
+				$(button).siblings().removeClass('btn-primary')
+				$(button).toggleClass('btn-primary')
 
-			if @clicks == @maxClicks
-				if not @correct
-					closeGrid(@exitTrial)
-				else
-					@checkResponses()
+			if $('.resp.btn-primary').length == @maxClicks
+				$('#rightButton').removeClass('disabled')
+				$('#rightButton').addClass('btn-success')
+			else if $('.resp.btn-primary').length != @maxClicks
+				$('#rightButton').addClass('disabled')
+				$('#rightButton').removeClass('btn-success')
+
 
 	checkResponses: ->
 		responses = $('.resp.btn-primary').map( ->
@@ -285,19 +288,13 @@ class InstGrid
 			closeGrid(@exitTrial)
 			$('#correct').modal('show')
 			setTimeout (=> $('#correct').modal('hide')), 1250
+
 		else
-			@tries += 1
+			@showError()
 
-			if @tries < 2
-				$('#error').modal('show')
-				setTimeout (=> $('#error').modal('hide')), 1250
-			else
-				text = 'The correct answer is: ' + @correct.join(", ")
-				$('#errortext').html(text)
-				$('#error').modal('show')
-				setTimeout (=> $('#error').modal('hide')), 5000
-			@reset()
-
+	showError: ->
+			$('#error').modal('show')
+			setTimeout (=> $('#error').modal('hide')), 1250
 
 class Block
 	constructor: (@condition, @message, trial_structure) ->
@@ -411,13 +408,13 @@ blocks = [
 	new Instruction instructions[4], "Back", "Start!"
 	new PracBlock "prac1", "Ready?", all_stim['pracLists'][0]
 	new Instruction instructions[5], "See again", "Continue"
-	new InstGrid instructions[6], ['Animals', 'Relatives'], true, false
-	new InstGrid instructions[7], ['Animals', 'Relatives'], false, ['Aunt', 'Cat'], false, false
+	new InstGrid instructions[6], all_cats, true, false
+	new InstGrid instructions[7], all_cats, false, ['Aunt', 'Cat'], false, false
 	new Instruction instructions[8], null, "Start"
 	new PracBlock "prac1", "Ready?", all_stim['pracLists'][1], 2000
-	new InstGrid "Please enter the last word of each category", all_stim['pracLists'][1][0], false, all_stim['pracLists'][1][1], false, false
+	new InstGrid "Please enter the last word of each category", all_cats, false, all_stim['pracLists'][1][1], false, false
 	new Instruction instructions[9]
-	# Include this to show questionnaire and debriefing
+	
 	new Questionnaire
 	new Debriefing
 ]
