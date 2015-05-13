@@ -1,5 +1,9 @@
 ## Common functions
 
+## Set up PsiTurk and preload the pages that will be shown after task is done
+psiTurk = PsiTurk(uniqueId, adServerLoc)
+psiTurk.preloadPages(['postquestionnaire.html', 'debriefing.html'])
+
 # Calculates the mean of a numeric array (for feedback)
 mean = (numericArray) ->
 	sum = numericArray.reduce((a, b) -> a + b)
@@ -31,9 +35,9 @@ class Debriefing
 	buttonClick: ->
 		@exitTrial()	
 
+@psiTurk = psiTurk
 
-
-@commonTask = {
+@common = {
 	Questionnaire
 	Debriefing
 	mean

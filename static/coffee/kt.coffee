@@ -1,48 +1,48 @@
 ## Keep Track Task
 
-## Set up PsiTurk and preload the pages that will be shown after task is done
-psiTurk = PsiTurk(uniqueId, adServerLoc)
-psiTurk.preloadPages(['postquestionnaire.html', 'debriefing.html'])
-
-
 instructions = ["
 In this task, you'll see one word at a time from various categories.<br><br>
-Your job will be to remember the last word from specific categories. <br><br>
+Your job will be to remember the last word from some of those categories. <br><br>
 
 Let's see how it works!"
 
 "The words you'll see belong to six categories.<br>
 Take a second to familiarize yourself with them. "
 
-"You'll be told which categories to keep track of before you see the words. <br><br>
-For example, you may be asked to keep track of <i>only</i> 'Colors' and 'Animals'.<br><br>
+"You'll be told which categories to pay attention to before you see any words. The categories will stay on the screen, so don't worry about memorizing them. <br><br>
+For example, you may be asked to keep track of only words that are <strong>animals</strong>.<br><br>
 
-In this case, you'll want to ignore words from other categories, like 'Countries.'"
+In this case, you'll want to ignore words from other categories, like <i>countries<i> or <i>metals</i>."
 
-"You'll always see on the screen the category names you should keep track of.<br><br>
-Above the categories you'll see one word at a time for about 2 seconds each.<br><br>
-Let's see an example."
-
-"For this example, we're going to slow everything down to make it easier to understand.<br><br>
-You'll be keeping track of <strong>'Animals'</strong> and <strong>'Relatives'</strong>. <br><br>Only keep track of the <i>last</i> word from each of these categories.<br><br>
-Click start to begin! 
 "
+Above the categories you'll see one word at a time for two seconds each.<br><br>
+For example, you might see the word 'Tiger' followed by 'Yard' and then 'Horse'. <br><br>
+If you were asked to keep track of <strong>animals</strong>, the correct answer would be 'Horse', because it was the last animal word we shoed you."
 
-"The last Animal word was 'Cat' and the last Relative was 'Aunt'.  <br><br>
+"Let's see a short example!<br><br>
+
+You'll see six words in a row.<br><br>	
+
+Keep track of only words that are <strong>animals</strong>. <br><br>
+Ignore words from other categories.<br><br>"
+
+"The last Animal word was 'Cat'.  <br><br>
 Is that what you saw?<br><br> If you are confused watch that again, otherwise let's learn how to input your responses."
 
 "You'll see a grid with all of the possible words in the categories you were asked to keep track of, like this:<br><br><br><br><br>
 
 To respond, just click on the word you thought was the last of each category. "
 
-"Try entering, 'Cat' and 'Aunt', the correct answer of the example"
+"Try entering, 'Cat', the correct answer of the example"
 
-"Good job. Notice how once you entered an answer, the other words in that category became disabled. 
-<br><br>Let's do a longer example, this time at full speed.<br><br>
+"Good job.
+<br><br>Let's do a longer example, this time with two categories.<br><br>
 Remember to pay attention to the categories and only keep track of the <i>last</i> 
 item from each category"
 
-"Great! You're done with the practice"
+"Great! You're done with the practice. <br><br>
+We're now going to show you 14 more lists<br><br>
+You will be asked to keep track of 2-5 categories. Pay a lot of attention, this task can get fairly difficult!"
 
 ]
 
@@ -86,14 +86,14 @@ closeGrid = (func) ->
 	$('#responses').fadeOut()
 	setTimeout (=> 
 		func()
-	) , 1000
+	) , 500
 
 clearGrid = ->
 	# Reset grid before showing again
 	$('.resp').removeClass('btn-primary')
 
-all_stim = {"pracLists": [[["Relatives", "Animals"], ["Aunt", "Cat"], ["Horse", "Mile", "Steel", "Cat", "Meter", "Green", "Aunt"]]
-, [["Metals", "Countries", "Distances", "Colors"], ["Steel", "Mexico", "Yard", "Green"], ["Red" ,"Blue" ,"Tin" ,"Cow" ,"Yellow" ,"England" ,"Lion" ,"Meter" ,"Inch" ,"Mexico" ,"Black" ,"Brother" ,"Green" ,"Cat" ,"Yard" ,"Aunt" ,"Uncle" ,"Steel" ,"Horse" ,"Father"]]]}
+stim = {"pracLists": [[["Animals"], ["Cat"], ["Horse", "Mile", "Steel", "Cat", "Green", "Aunt"]]
+, [["Metals", "Countries"], ["Steel", "Mexico"], ["Red" ,"Blue" ,"Tin" ,"Cow" ,"Yellow" ,"England" ,"Lion" ,"Meter" ,"Inch" ,"Mexico" ,"Black" ,"Brother" ,"Green" ,"Cat" ,"Yard" ,"Aunt" ,"Uncle" ,"Steel" ,"Horse" ,"Father"]]]}
 
 categories = {"Animals": ["Dog", "Cat", "Tiger", "Horse", "Lion", "Cow"], "Relatives": ["Sister", "Mother", "Brother", "Aunt", "Father", "Uncle"], "Distances" :["Mile", "Centimeter", "Inch", "Foot", "Meter", "Yard"], "Countries" :["Germany", "Russia", "Canada", "France", "England", "Mexico"], "Metals" :["Zinc", "Tin", "Steel", "Iron", "Copper", "Platinum"], "Colors" :["Red", "Green", "Blue", "Yellow", "Black", "Orange"]}
 
@@ -157,7 +157,6 @@ class Session
 	endSession: ->
 		psiTurk.completeHIT()
 		
-
 	# Handles button clocks (mostly for questionnaires)
 	buttonClick: (e) ->
 		@currBlock.buttonClick(e)
@@ -357,6 +356,6 @@ class Word
 	PracBlock
 	Word
 	instructions
-	all_stim
+	stim
 	all_cats
 }
