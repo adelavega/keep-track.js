@@ -17,7 +17,7 @@ In this case, you'll want to ignore words from other categories, like <i>countri
 "
 Above the categories you'll see one word at a time for two seconds each.<br><br>
 For example, you might see the word 'Tiger' followed by 'Yard' and then 'Horse'. <br><br>
-If you were asked to keep track of <strong>animals</strong>, the correct answer would be 'Horse', because it was the last animal word we shoed you."
+If you were asked to keep track of <strong>animals</strong>, the correct answer would be 'Horse', because it was the last animal word we showed you."
 
 "Let's see a short example!<br><br>
 
