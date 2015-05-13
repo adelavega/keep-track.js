@@ -7,12 +7,12 @@ jQuery ->
 # This is where you set the order of your blocks
 # Simply an array that will get passed down to the Session
 blocks = [
-# 	new kTrack.Instruction kTrack.instructions[0]
-# 	new kTrack.InstGrid kTrack.instructions[1]
-	# new kTrack.Instruction kTrack.instructions[2]
-	# new kTrack.Instruction kTrack.instructions[3]
-	# new kTrack.Instruction kTrack.instructions[4], "Back", "Start!"
-	# new kTrack.PracBlock "prac1", "Ready?", kTrack.stim['pracLists'][0]
+	new kTrack.Instruction kTrack.instructions[0]
+	new kTrack.InstGrid kTrack.instructions[1]
+	new kTrack.Instruction kTrack.instructions[2]
+	new kTrack.Instruction kTrack.instructions[3]
+	new kTrack.Instruction kTrack.instructions[4], "Back", "Start!"
+	new kTrack.PracBlock "prac1", "Ready?", kTrack.stim['pracLists'][0]
 	new kTrack.Instruction kTrack.instructions[5], "See again", "Continue" ## Change instructions
 	new kTrack.InstGrid kTrack.instructions[6], kTrack.stim['pracLists'][0][0], true, false
 	new kTrack.InstGrid kTrack.instructions[7], kTrack.stim['pracLists'][0][0], false, ['Cat'], false, false
