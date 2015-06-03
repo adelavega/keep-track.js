@@ -42,7 +42,7 @@ item from each category"
 
 "Great! You're done with the practice. <br><br>
 We're now going to show you 14 more lists<br><br>
-You will be asked to keep track of 2-5 categories. Pay a lot of attention, this task can get fairly difficult!"
+You will be asked to keep track of 3 or 4 categories. Pay a lot of attention, this task can get fairly difficult!"
 
 ]
 
@@ -95,11 +95,11 @@ clearGrid = ->
 stim = {"pracLists": [[["Animals"], ["Cat"], ["Horse", "Mile", "Steel", "Cat", "Green", "Aunt"]]
 , [["Metals", "Countries"], ["Steel", "Mexico"], ["Red" ,"Blue" ,"Tin" ,"Cow" ,"Yellow" ,"England" ,"Lion" ,"Meter" ,"Inch" ,"Mexico" ,"Black" ,"Brother" ,"Green" ,"Cat" ,"Yard" ,"Aunt" ,"Uncle" ,"Steel" ,"Horse" ,"Father"]]]}
 
+real_stim = [[["Distances", "Animals", "Countries"], ["Mile", "Cat", "France"], ["Cow", "Germany", "Zinc", "Blue", "Canada", "Mile", "Mother", "Father", "Cat", "Uncle", "Orange", "Sister", "France", "Copper", "Aunt"]], [["Colors", "Metals", "Relatives", "Distances"], ["Black", "Steel", "Father", "Centimeter"], ["Sister", "Brother", "Lion", "Canada", "Meter", "Germany", "Iron", "France", "Foot", "Father", "Black", "Centimeter", "Dog", "Steel", "Horse"]], [["Animals", "Countries", "Colors", "Metals"], ["Tiger", "Mexico", "Blue", "Tin"], ["Yellow", "Mile", "England", "Red", "Sister", "Tiger", "Inch", "Tin", "Mexico", "Centimeter", "Meter", "Yard", "Foot", "Blue", "Father"]], [["Relatives", "Distances", "Animals"], ["Aunt", "Inch", "Lion"], ["Dog", "Platinum", "Iron", "Horse", "Russia", "Aunt", "Green", "Yard", "Inch", "Lion", "Tin", "Yellow", "Steel", "Red", "England"]], [["Countries", "Colors", "Metals"], ["Russia", "Orange", "Platinum"], ["Brother", "Zinc", "Green", "Russia", "Copper", "Horse", "Centimeter", "Platinum", "Tiger", "Meter", "Cat", "Mile", "Orange", "Aunt", "Lion"]], [["Relatives", "Distances", "Animals"], ["Uncle", "Mile", "Cow"], ["Tin", "Foot", "Black", "England", "Uncle", "Red", "Mile", "Mexico", "Lion", "Yellow", "Tiger", "Cow", "Steel", "Orange", "Russia"]], [["Countries", "Colors", "Metals", "Relatives"], ["Germany", "Blue", "Zinc", "Mother"], ["Tin", "Yellow", "Foot", "Germany", "Aunt", "Sister", "Cow", "Tiger", "Lion", "Mother", "Blue", "Iron", "Zinc", "Dog", "Inch"]]]
 categories = {"Animals": ["Dog", "Cat", "Tiger", "Horse", "Lion", "Cow"], "Relatives": ["Sister", "Mother", "Brother", "Aunt", "Father", "Uncle"], "Distances" :["Mile", "Centimeter", "Inch", "Foot", "Meter", "Yard"], "Countries" :["Germany", "Russia", "Canada", "France", "England", "Mexico"], "Metals" :["Zinc", "Tin", "Steel", "Iron", "Copper", "Platinum"], "Colors" :["Red", "Green", "Blue", "Yellow", "Black", "Orange"]}
 
 all_cats = ['Distances', 'Relatives', 'Animals', 'Countries', 'Metals', 'Colors']
 
-# Some global variables
 stimLength = 2000
 
 ## Global session class
@@ -284,9 +284,10 @@ class Block
 		@trialNumber = 0
 		@categories = trial_structure[0]
 		@target_words = trial_structure[1]
-		@words = (new Word(word) for word in trial_structure[2])
+		@words = (new Word(word, 2000) for word in trial_structure[2])
 		@max_trials = @words.length
 		@catText = @categories.join("&nbsp&nbsp")
+		
 
 	# When block starts, hide buttons, show message, and after IBI start first trial
 	start: (@exitBlock) ->
@@ -315,21 +316,31 @@ class Block
 		$('#topText').html(" ")
 		$('#inst').html("Please enter the last word of each category")
 
+		keyText('Submit', 'right')
+
 		fillGrid(@categories)
 		@maxClicks = @categories.length
-		@clicks = 0
+		$('#rightButton').addClass('disabled')
+		$('#rightButton').removeClass('btn-success')
 
 
 	buttonClick: (button) ->
-		@clicks = @clicks + 1
-
-		$(button).siblings().removeClass('btn-primary').addClass('disabled')
-		$(button).toggleClass('btn-primary').addClass('disabled')
-
-		if @clicks == @maxClicks
-			## Collect data and send to psiTurk
+		if button.id is 'rightText' or button.id is 'rightButton'
 			closeGrid(@exitBlock)
-		psiTurk.recordTrialData({'block': @condition, 'target_words': @target_words, 'input_words': @data})
+			psiTurk.recordTrialData({'block': @condition, 'target_words': @target_words, 'input_words': @data})
+		else  
+			$(button).siblings().removeClass('btn-primary')
+			$(button).toggleClass('btn-primary')
+
+			console.log(@maxClicks)
+			if $('.resp.btn-primary').length == @maxClicks
+				$('#rightButton').removeClass('disabled')
+				$('#rightButton').addClass('btn-success')
+			else if $('.resp.btn-primary').length != @maxClicks
+				$('#rightButton').addClass('disabled')
+				$('#rightButton').removeClass('btn-success')
+
+		
 	
 class PracBlock extends Block
 	constructor: (@condition, @message, trial_structure, speed=3500) ->
@@ -358,4 +369,5 @@ class Word
 	instructions
 	stim
 	all_cats
+	real_stim
 }
