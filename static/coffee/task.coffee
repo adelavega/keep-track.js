@@ -20,7 +20,6 @@ blocks = [
 	new kTrack.PracBlock "prac2", "Ready?", kTrack.stim['pracLists'][1], 2000
 	new kTrack.InstGrid "Please enter the last word of each category", kTrack.stim['pracLists'][1][0], false, kTrack.stim['pracLists'][1][1], false, false
 	new kTrack.Instruction kTrack.instructions[9]
-
 	new kTrack.Block "1", "Ready?", kTrack.real_stim[0]
 	new kTrack.Block "2", "Ready?", kTrack.real_stim[1]
 	new kTrack.Block "3", "Ready?", kTrack.real_stim[2]
