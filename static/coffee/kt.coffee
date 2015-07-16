@@ -1,51 +1,5 @@
 ## Keep Track Task
 
-instructions = ["
-In this task, you'll see one word at a time from various categories.<br><br>
-Your job will be to remember the last word from some of those categories. <br><br>
-
-Let's see how it works!"
-
-"The words you'll see belong to six categories.<br>
-Take a second to familiarize yourself with them. "
-
-"You'll be told which categories to pay attention to before you see any words. The categories will stay on the screen, so don't worry about memorizing them. <br><br>
-For example, you may be asked to keep track of only words that are <strong>animals</strong>.<br><br>
-
-In this case, you'll want to ignore words from other categories, like <i>countries<i> or <i>metals</i>."
-
-"
-Above the categories you'll see one word at a time for two seconds each.<br><br>
-For example, you might see the word 'Tiger' followed by 'Yard' and then 'Horse'. <br><br>
-If you were asked to keep track of <strong>animals</strong>, the correct answer would be 'Horse', because it was the last animal word we showed you."
-
-"Let's see a short example!<br><br>
-
-You'll see six words in a row.<br><br>	
-
-Keep track of only words that are <strong>animals</strong>. <br><br>
-Ignore words from other categories.<br><br>"
-
-"The last Animal word was 'Cat'.  <br><br>
-Is that what you saw?<br><br> If you are confused watch that again, otherwise let's learn how to input your responses."
-
-"You'll see a grid with all of the possible words in the categories you were asked to keep track of, like this:<br><br><br><br><br>
-
-To respond, just click on the word you thought was the last of each category. "
-
-"Try entering, 'Cat', the correct answer of the example"
-
-"Good job.
-<br><br>Let's do a longer example, this time with two categories.<br><br>
-Remember to pay attention to the categories and only keep track of the <i>last</i> 
-item from each category"
-
-"Great! You're done with the practice. <br><br>
-We're now going to show you 14 more lists<br><br>
-You will be asked to keep track of 3 or 4 categories. Pay a lot of attention, this task can get fairly difficult!"
-
-]
-
 # Hides left and right buttons
 hideButtons = ->
 	$("#leftButton").hide()
@@ -209,7 +163,9 @@ class Instruction
 class InstGrid
 	constructor: (@message, @categories=all_cats, @disabled=true, @correct=false, @leftKey = "Back", @rightKey = "Continue") ->
 		@maxClicks = @correct.length
-		console.log(@correct.length)
+		@nClicks = 0
+		@triesBeforeHint = 2
+
 
 
 	start: (@exitTrial) ->
@@ -220,7 +176,6 @@ class InstGrid
 
 		hideButtons()
 		if @leftKey
-			console.log(@leftKey)
 			keyText(@leftKey, 'left')
 
 		if @rightKey
@@ -230,6 +185,7 @@ class InstGrid
 			keyText('Submit', 'right')
 			$('#rightButton').addClass('disabled')
 			$('#rightButton').removeClass('btn-success')
+
 
 	reset: ->
 		clearGrid()
@@ -256,6 +212,8 @@ class InstGrid
 
 
 	checkResponses: ->
+		@nClicks += 1
+
 		responses = $('.resp.btn-primary').map( ->
                  $(this).text()
               ).get()
@@ -270,14 +228,18 @@ class InstGrid
 		if allCorr
 			closeGrid(@exitTrial)
 			$('#correct').modal('show')
+			$('#errortext').html("Try again")
 			setTimeout (=> $('#correct').modal('hide')), 1250
 
 		else
 			@showError()
 
 	showError: ->
-			$('#error').modal('show')
-			setTimeout (=> $('#error').modal('hide')), 1250
+		if @nClicks >= @triesBeforeHint
+			$('#errortext').html("The correct words are " + @correct.join(', '))
+
+		$('#error').modal('show')
+		setTimeout (=> $('#error').modal('hide')), 1500
 
 class Block
 	constructor: (@condition, @message, trial_structure) ->
@@ -286,7 +248,12 @@ class Block
 		@target_words = trial_structure[1]
 		@words = (new Word(word, 2000) for word in trial_structure[2])
 		@max_trials = @words.length
-		@catText = @categories.join("&nbsp&nbsp")
+		
+		upper_cats = [cat.toUpperCase() for cat in @categories]
+		@catText = upper_cats[0].join("&nbsp&nbsp")
+
+		console.log(@categories)
+
 		
 
 	# When block starts, hide buttons, show message, and after IBI start first trial
@@ -300,7 +267,7 @@ class Block
 			$('#bottomText').html(@catText)
 			setTimeout (=>
 				@nextTrial()), stimLength
-		) ,stimLength
+		) ,stimLength * 2
 
 	nextTrial: ->
 		@currTrial = @words[@trialNumber]
@@ -332,7 +299,6 @@ class Block
 			$(button).siblings().removeClass('btn-primary')
 			$(button).toggleClass('btn-primary')
 
-			console.log(@maxClicks)
 			if $('.resp.btn-primary').length == @maxClicks
 				$('#rightButton').removeClass('disabled')
 				$('#rightButton').addClass('btn-success')
@@ -361,12 +327,11 @@ class Word
 
 @kTrack = {
 	Session
-	Instruction
 	InstGrid
 	Block
 	PracBlock
 	Word
-	instructions
+	Instruction
 	stim
 	all_cats
 	real_stim
