@@ -21,9 +21,10 @@ class Questionnaire
 	buttonClick: ->
 		$("select").each (i, val) ->
 		  psiTurk.recordUnstructuredData @id, @value
-		  console.log([@id, @value])
 
 		psiTurk.recordUnstructuredData 'openended', $('#openended').val()
+
+		psiTurk.saveData()
 
 		@exitTrial()
 

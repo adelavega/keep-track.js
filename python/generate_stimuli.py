@@ -2,12 +2,21 @@ import random
 import pandas as pd
 import os
 import json
+from os import makedirs
+from os.path import exists
+
 
 categories = {"Animals": ["Dog", "Cat", "Tiger", "Horse", "Lion", "Cow"], "Relatives": ["Sister", "Mother", "Brother", "Aunt", "Father", "Uncle"], "Distances": ["Mile", "Centimeter", "Inch", "Foot", "Meter", "Yard"], "Countries": [
     "Germany", "Russia", "Canada", "France", "England", "Mexico"], "Metals": ["Zinc", "Tin", "Steel", "Iron", "Copper", "Platinum"], "Colors": ["Red", "Green", "Blue", "Yellow", "Black", "Orange"]}
 
 class StimGen():
 	def __init__(self, categories, num_targets, len_lists = 15):
+		""" Keep track task stimuli generator. Provide the following:
+		categories: a dictionary of category names and items
+		num_targets: a list of the number of targets in each trial. 
+		len_lists: How long each trial should be.
+		"""
+
 		self.total_categories = categories.keys() * (sum(num_targets) / len(categories))
 		self.categories = categories
 		self.num_targets = num_targets
@@ -119,6 +128,7 @@ class StimGen():
 
 
 	def generate_stim(self):
+		""" Run this to generate the stimuli"""
 
 		## Put it all together
 		self.all_targets = []
@@ -145,6 +155,9 @@ class StimGen():
 			self.last_targets.append([filter(lambda x: x in categories[cat], all_stim)[-1] for cat in trial])
 
 	def save(self, out_dir = '../static/stimuli'):
+		if not exists(out_dir):
+			makedirs(out_dir)
+
 		pd.DataFrame(self.all_stimuli).T.to_csv(os.path.join(out_dir, 'stimuli.csv'))
 		pd.DataFrame(self.last_targets).T.to_csv(os.path.join(out_dir, 'last_targets.csv'))
 		pd.DataFrame(self.all_targets).T.to_csv(os.path.join(out_dir, 'all_targets.csv'))

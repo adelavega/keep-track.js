@@ -25,10 +25,10 @@
 
     Questionnaire.prototype.buttonClick = function() {
       $("select").each(function(i, val) {
-        psiTurk.recordUnstructuredData(this.id, this.value);
-        return console.log([this.id, this.value]);
+        return psiTurk.recordUnstructuredData(this.id, this.value);
       });
       psiTurk.recordUnstructuredData('openended', $('#openended').val());
+      psiTurk.saveData();
       return this.exitTrial();
     };
 

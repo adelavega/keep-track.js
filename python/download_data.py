@@ -2,7 +2,7 @@ from sqlalchemy import create_engine, MetaData, Table
 import json
 
 db_url = "mysql://adminmHsxPQq:U_2Vyn6bbM37@127.11.141.2:3306/genesforgood"
-table_name = 'categoryswitch'
+table_name = 'keeptrack'
 data_column_name = 'datastring'
 
 # boilerplace sqlalchemy setup
@@ -21,7 +21,7 @@ statuses = [3,4,5,7]
 exclude = []
 for row in rows:
     # only use subjects who completed experiment and aren't excluded
-    if row['status'] in statuses and row['uniqueid'] not in exclude:
+    if row['uniqueid'] not in exclude:
         data.append(row[data_column_name])	
 
 # Now we have all participant datastrings in a list.

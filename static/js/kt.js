@@ -124,6 +124,7 @@
       if (next == null) {
         next = true;
       }
+      psiTurk.saveData();
       if (next) {
         return this.nextBlock();
       } else {
@@ -390,12 +391,21 @@
     };
 
     Block.prototype.buttonClick = function(button) {
+      var responses;
       if (button.id === 'rightText' || button.id === 'rightButton') {
+        responses = $('.resp.btn-primary').map(function() {
+          return $(this).text();
+        }).get();
+        console.log({
+          'block': this.condition,
+          'target_words': this.target_words,
+          'input_words': responses
+        });
         closeGrid(this.exitBlock);
         return psiTurk.recordTrialData({
           'block': this.condition,
           'target_words': this.target_words,
-          'input_words': this.data
+          'input_words': responses
         });
       } else {
         $(button).siblings().removeClass('btn-primary');

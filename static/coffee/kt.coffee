@@ -101,7 +101,7 @@ class Session
 	# This gets called when block is over.
 	# Saves data and goes back or forward
 	exitBlock: (next = true) ->
-		# psiTurk.saveData()
+		psiTurk.saveData()
 		if next
 			@nextBlock()
 		else
@@ -293,8 +293,14 @@ class Block
 
 	buttonClick: (button) ->
 		if button.id is 'rightText' or button.id is 'rightButton'
+			responses = $('.resp.btn-primary').map( ->
+                 $(this).text()
+              ).get()
+
+			console.log({'block': @condition, 'target_words': @target_words, 'input_words': responses})
+
 			closeGrid(@exitBlock)
-			psiTurk.recordTrialData({'block': @condition, 'target_words': @target_words, 'input_words': @data})
+			psiTurk.recordTrialData({'block': @condition, 'target_words': @target_words, 'input_words': responses})
 		else  
 			$(button).siblings().removeClass('btn-primary')
 			$(button).toggleClass('btn-primary')
