@@ -40,8 +40,8 @@ Remember to pay attention to the categories and only keep track of the <i>last</
 item from each category"
 
 "Great! You're done with the practice. <br><br>
-We're now going to show you 7 more lists.<br>When you enter the answer for one trial, the next one will begin immediately after. <br><br>
-You will be asked to keep track of 3 or 4 categories.<br><br> Pay a lot of attention, this task can get fairly difficult! <br>
+We're now going to show you 8 more lists.<br>When you enter the answer for one trial, the next one will begin immediately after. <br><br>
+You will be asked to keep track of 3, 4 or 5 categories.<br><br> Pay a lot of attention, this task can get really hard, especially with 5 categories. <br>
 "
 
 ]
