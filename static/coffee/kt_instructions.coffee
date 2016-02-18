@@ -22,7 +22,7 @@ If you were asked to keep track of <strong>animals</strong>, the correct answer 
 
 You'll see six words in a row.<br><br>	
 
-Keep track of only words that are <strong>animals</strong>. <br><br>
+Keep track <i>in your head</i> words that are <strong>animals</strong>. <br><br>
 Ignore words from other categories.<br><br>"
 
 "The last Animal word was 'Cat'.  <br><br>

@@ -1,8 +1,12 @@
 ## Common functions
 
 ## Set up PsiTurk and preload the pages that will be shown after task is done
-psiTurk = PsiTurk(uniqueId, adServerLoc)
-psiTurk.preloadPages(['postquestionnaire.html', 'debriefing.html'])
+dataHandler = PsiTurk(uniqueId, adServerLoc)
+
+## Alternatively set this up for local server hosting using dataHandler.js
+# dataHandler = DataHandler(uniqueId, experimentName)
+
+dataHandler.preloadPages(['postquestionnaire.html', 'kt_debriefing.html'])
 
 # Calculates the mean of a numeric array (for feedback)
 mean = (numericArray) ->
@@ -16,27 +20,27 @@ mean = (numericArray) ->
 # collects information from it once button is clocked
 class Questionnaire
 	start: (@exitTrial) ->
-		$('body').html(psiTurk.getPage('postquestionnaire.html'))
+		$('body').html(dataHandler.getPage('postquestionnaire.html'))
 
 	buttonClick: ->
 		$("select").each (i, val) ->
-		  psiTurk.recordUnstructuredData @id, @value
+		  dataHandler.recordUnstructuredData @id, @value
 
-		psiTurk.recordUnstructuredData 'openended', $('#openended').val()
+		dataHandler.recordUnstructuredData 'openended', $('#openended').val()
 
-		psiTurk.saveData()
+		dataHandler.saveData()
 
 		@exitTrial()
 
 # Displays debriefing and when button is clicked ends
 class Debriefing
 	start: (@exitTrial) ->
-		$('body').html(psiTurk.getPage('debriefing.html'))
+		$('body').html(dataHandler.getPage('kt_debriefing.html'))
 
 	buttonClick: ->
 		@exitTrial()	
 
-@psiTurk = psiTurk
+@dataHandler = dataHandler
 
 @common = {
 	Questionnaire

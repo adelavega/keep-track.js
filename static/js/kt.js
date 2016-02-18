@@ -85,7 +85,7 @@
     }
 
     Session.prototype.start = function() {
-      psiTurk.finishInstructions();
+      dataHandler.finishInstructions();
       this.imgs_loaded++;
       if (this.imgs_loaded === 2) {
         return this.nextBlock();
@@ -124,7 +124,7 @@
       if (next == null) {
         next = true;
       }
-      psiTurk.saveData();
+      dataHandler.saveData();
       if (next) {
         return this.nextBlock();
       } else {
@@ -133,7 +133,7 @@
     };
 
     Session.prototype.endSession = function() {
-      return psiTurk.completeHIT();
+      return dataHandler.completeHIT();
     };
 
     Session.prototype.buttonClick = function(e) {
@@ -199,7 +199,7 @@
           this.exitTrial();
         }
       }
-      return psiTurk.recordTrialData({
+      return dataHandler.recordTrialData({
         'block': this.message,
         'rt': rt,
         'resp': button,
@@ -402,7 +402,7 @@
           'input_words': responses
         });
         closeGrid(this.exitBlock);
-        return psiTurk.recordTrialData({
+        return dataHandler.recordTrialData({
           'block': this.condition,
           'target_words': this.target_words,
           'input_words': responses
