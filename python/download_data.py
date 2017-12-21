@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, MetaData, Table
 import json
 
-db_url = "mysql://adminmHsxPQq:U_2Vyn6bbM37@127.11.141.2:3306/genesforgood"
+db_url = "URL"
 table_name = 'keeptrack'
 data_column_name = 'datastring'
 
